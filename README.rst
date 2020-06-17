@@ -4,34 +4,32 @@ My Awesome Project
 
 
 
-Settings
+Install
 ============
 
 
-1.予算とアラートから予算を作成(Pub/Subトピックを新規作成する)
+1.Setting budget and alerts with Pub/Sub topics in GCP
 -------------------------------------------------------------
 
 https://console.cloud.google.com/billing
 
 
-2. 予算を作成
--------------
+2. Creat a slack bot in slack api
+-----------------------------------------
 
 
-1. https://api.slack.com にアクセスしてbot作成
+1. Access to https://api.slack.com and creat a bot
 
-2. "OAuth & Permissions"から"Send messages as ~"設定
+2. In "App Home" Add, "App Display Name"
 
-3. "Install App to Workspace"でワークスペースに追加
+3. In "OAuth & Permissions" > "Scopes" > "Bot Token Scopes", set chat:write "Send messages as ~"
 
-4. "OAuth Access Token"をメモっとく
+4. "Install App to Workspace"
+
+5. Copy "Bot User OAuth Access Token"
 
 
-3. main.pyをCloudFunctionにデプロイ
+3. Deploy main.py to CloudFunction
 -------------------------------------------------------------------------------------------
 
-チャンネルIDとトークン記入
-
-
-
-
+Add ACCESS_TOKEN, CHANNEL_ID
