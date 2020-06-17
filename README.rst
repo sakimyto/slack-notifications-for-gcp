@@ -32,4 +32,5 @@ https://console.cloud.google.com/billing
 3. Deploy main.py to CloudFunction
 -------------------------------------------------------------------------------------------
 
-Add ACCESS_TOKEN, CHANNEL_ID
+- Change ACCESS_TOKEN, CHANNEL_ID to yours
+- Set cloud Pub/Sub topics as a Trigger
