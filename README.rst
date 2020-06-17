@@ -36,7 +36,9 @@ https://console.cloud.google.com/billing
 - Set cloud Pub/Sub topics as a Trigger
 
 4. Invite bot to a channel
+-------------------------------------------------------------------------------------------
 
 5. Testing in cloud functions
+-------------------------------------------------------------------------------------------
 
 complete!!
