@@ -20,8 +20,8 @@ def notify_slack(data, context):
         budgetAmount = notification_data.get('budgetAmount')
         currencyCode = notification_data.get('currencyCode')
         costAmount = notification_data.get('costAmount')
-        now_pace = costAmount / int(today - first_day)
-        schedule_pace = budgetAmount / 30
+        now_pace = costAmount / float(today - first_day)
+        schedule_pace = budgetAmount / float(30)
         if now_pace > schedule_pace:
             # in English
             budget_notification_text = '<!channel> \nBudget consumption rate is too fast.\n\n'
