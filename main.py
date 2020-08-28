@@ -50,3 +50,31 @@ def notify_slack(data, context):
         assert e.response['ok'] is False
         assert e.response['error']
         print(f"Got an error: {e.response['error']}")
+
+
+def notify_slack2(data, context):
+    try:
+        now_hour = datetime.datetime.now().hour
+
+        if now_hour + 9 == 9:
+            notification_data = base64.b64decode(data['data']).decode('utf-8')
+            notification_data = json.loads(notification_data)
+
+            budgetAmount = notification_data.get('budgetAmount')
+            currencyCode = notification_data.get('currencyCode')
+            costAmount = notification_data.get('costAmount')
+
+            budget_notification_text = '{環境名}\n'
+            budget_notification_text += '設定している予算額：' + str(budgetAmount) + ' (' + str(currencyCode) + ')\n'
+            budget_notification_text += '現在の消化予算：' + str(costAmount) + ' (' + str(currencyCode) + ')'
+
+            response = slack_client.chat_postMessage(
+                channel=CHANNEL_ID,
+                text=budget_notification_text)
+            assert response['message']['text'] == budget_notification_text
+
+    except slack.errors.SlackApiError as e:
+        assert e.response['ok'] is False
+        assert e.response['error']
+        print(f"Got an error: {e.response['error']}")
+
