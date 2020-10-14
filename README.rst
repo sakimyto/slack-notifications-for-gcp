@@ -12,9 +12,9 @@ Getting Started / スタートガイド
 Prerequisites / 必要条件
 ====================================
 - GCP
-  - Google Cloud Billing
-  - Google Cloud Pub/Sub
-  - Google Cloud Functions
+    - Google Cloud Billing
+    - Google Cloud Pub/Sub
+    - Google Cloud Functions
 - Python 3.7.2
 - Slack bot
 
