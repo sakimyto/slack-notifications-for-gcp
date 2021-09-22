@@ -1,2 +1,1 @@
-slackclient==2.7.1
-python-dateutil==2.8.1
+slack-sdk

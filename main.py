@@ -1,80 +1,40 @@
+import os
 import json
 import base64
 import datetime
-import dateutil.parser
-import slack
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
 
-BOT_ACCESS_TOKEN = 'xxxx-111111111111-abcdefghidklmnopq'
-CHANNEL_ID = 'C0XXXXXX'
+slack_token = os.environ.get('BOT_ACCESS_TOKEN')
+channel_id = os.environ.get('CHANNEL_ID')
+slack_client = WebClient(token=slack_token)
 
-slack_client = slack.WebClient(token=BOT_ACCESS_TOKEN)
 
-
-def notify_slack(data, context):
+def notify_slack(data, ctx):
     try:
+        # If you want to easily control the notification time, use datetime.
+
+        # now_hour = datetime.datetime.now().hour
+        # if now_hour + 9 == 9:
+
         notification_data = base64.b64decode(data['data']).decode('utf-8')
         notification_data = json.loads(notification_data)
 
-        today = datetime.datetime.now().day
-        first_day = dateutil.parser.parse(notification_data.get('costIntervalStart')).day
         budgetAmount = notification_data.get('budgetAmount')
         currencyCode = notification_data.get('currencyCode')
         costAmount = notification_data.get('costAmount')
-        now_pace = costAmount / float(today - first_day)
-        schedule_pace = budgetAmount / float(30)
-        if now_pace > schedule_pace:
-            # in English
-            budget_notification_text = '<!channel> \nBudget consumption rate is too fast.\n\n'
-            budget_notification_text += 'BudgetAmount：' + str(budgetAmount) + ' (' + str(currencyCode) + ')\n'
-            budget_notification_text += 'CostAmount：' + str(costAmount) + ' (' + str(currencyCode) + ')\n\n'
-            budget_notification_text += 'BudgetAmount per day：' + str(round(schedule_pace)) + ' (' + str(
-                currencyCode) + ')\n'
-            budget_notification_text += 'CostAmount per day：' + str(round(now_pace)) + ' (' + str(
-                currencyCode) + ')\n\n'
-            budget_notification_text += 'Please check your GCP'
 
-            # in Japanese
-            # budget_notification_text = '<!channel> \n予算に対して、1日の利用料金ペースが上回っています！\n\n'
-            # budget_notification_text += '設定している予算額：' + str(budgetAmount) + ' (' + str(currencyCode) + ')\n'
-            # budget_notification_text += '現在の消化予算：' + str(costAmount) + ' (' + str(currencyCode) + ')\n\n'
-            # budget_notification_text += '1日あたり予定予算：' + str(round(schedule_pace)) + ' (' + str(currencyCode) + ')\n'
-            # budget_notification_text += '1日あたり消化予算：' + str(round(now_pace)) + ' (' + str(currencyCode) + ')\n\n'
-            # budget_notification_text += '念のため確認しておきましょう！'
+        budget_notification_text = '設定している予算額：' + str(budgetAmount) + ' (' + str(currencyCode) + ')\n'
+        budget_notification_text += '現在の消化予算：' + str(costAmount) + ' (' + str(currencyCode) + ')\n\n'
+        budget_notification_text += '詳細内訳レポート\n'
+        budget_notification_text += 'https://console.cloud.google.com/billing/xxxxxxxxxx'
 
-            response = slack_client.chat_postMessage(
-                channel=CHANNEL_ID,
-                text=budget_notification_text)
-            assert response['message']['text'] == budget_notification_text
+        slack_client.chat_postMessage(
+            channel=channel_id,
+            text=budget_notification_text
+        )
 
-    except slack.errors.SlackApiError as e:
+    except SlackApiError as e:
         assert e.response['ok'] is False
         assert e.response['error']
         print(f"Got an error: {e.response['error']}")
-
-
-def notify_slack2(data, context):
-    try:
-        now_hour = datetime.datetime.now().hour
-
-        if now_hour + 9 == 9:
-            notification_data = base64.b64decode(data['data']).decode('utf-8')
-            notification_data = json.loads(notification_data)
-
-            budgetAmount = notification_data.get('budgetAmount')
-            currencyCode = notification_data.get('currencyCode')
-            costAmount = notification_data.get('costAmount')
-
-            budget_notification_text = '{環境名}\n'
-            budget_notification_text += '設定している予算額：' + str(budgetAmount) + ' (' + str(currencyCode) + ')\n'
-            budget_notification_text += '現在の消化予算：' + str(costAmount) + ' (' + str(currencyCode) + ')'
-
-            response = slack_client.chat_postMessage(
-                channel=CHANNEL_ID,
-                text=budget_notification_text)
-            assert response['message']['text'] == budget_notification_text
-
-    except slack.errors.SlackApiError as e:
-        assert e.response['ok'] is False
-        assert e.response['error']
-        print(f"Got an error: {e.response['error']}")
-
