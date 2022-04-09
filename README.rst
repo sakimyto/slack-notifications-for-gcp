@@ -48,7 +48,7 @@ Installing / インストール
 3. Deploy main.py to CloudFunction
 -------------------------------------------------------------------------------------------
 
-- Change ACCESS_TOKEN, CHANNEL_ID to yours
+- Set BOT_ACCESS_TOKEN, CHANNEL_ID vars
 - Set cloud Pub/Sub topics as a Trigger
 
 4. Invite bot to a channel
